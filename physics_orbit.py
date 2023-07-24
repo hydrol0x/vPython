@@ -18,14 +18,14 @@ star = sphere(pos=vector(1e-5,0,0), color=color.yellow, radius=3, make_trail=Tru
 planet.mass=100
 star.mass=10e8
 planet.velocity = vector(0, 500, 1)
-star.velocity = vector(0,0,1)
+star.velocity = vector(0,0,10)
 star.acceleration = vector(0,0,0)
 scene.camera.follow(star)
 # radius from origin
 
-dt=0.001
+dt=0.0001
 while True:
-    rate(100)
+    rate(1000)
     planet_r = planet.pos - star.pos
     print(planet.pos)
     planet_a = ((planet.pos-star.pos).hat*(g_acceleration(star.mass, planet_r)-centrifugal_acceleration(planet.velocity, planet_r)))
