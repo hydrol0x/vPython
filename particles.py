@@ -5,7 +5,7 @@ scene.forward = vector(0,-.3,-1)
 
 
 # G = 6.7e-11
-G = 10000
+G = 100
 
 # acceleration direction = norm(vector pointing to 0, 0, 0)*mag(g_acc)
 
@@ -37,14 +37,14 @@ def grav_force(particle1, particle2):
     
 
 particles = []
-for i in range(2):
+for i in range(3):
     x = random.randint(1, 100) 
     y = random.randint(1, 100) 
     z = random.randint(1, 100) 
     
-    vx = random.randint(0, 1) 
-    vy = random.randint(0, 1) 
-    vz = random.randint(0, 1) 
+    vx = random.randint(0, 10) 
+    vy = random.randint(0, 10) 
+    vz = random.randint(0, 10) 
     particle = create_particle(100, 1, vector(x,y,z), vector(vx,vy,vz))
     particles.append(particle) 
 # particles.append(create_particle(1e6, 100, vector(0,0,0), vector(0,100,0)))
@@ -69,7 +69,6 @@ while True:
                 particle1.color = color.red
     for particle in particles:
         dx = (particle.momentum/particle.mass)*dt
-        print(particles[0].pos)
         particle.pos+=dx
     rate(1/(dt))
     
