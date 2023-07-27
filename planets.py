@@ -40,8 +40,9 @@ particles = []
 
 particles.append(create_particle(1e6, 100, vector(0,0,0), vector(0,100,0)))
 planet = create_particle(1000, 5, vector(400,0,0), vector(0,0,5000))
+particles.append(create_particle(1500, 8, vector(-500,0,0), vector(0,0,-5000)))
 particles.append(planet)
-particles.append(create_particle(1, 1, vector(420,0,0), vector(0,400,5500)))
+particles.append(create_particle(1, 1, vector(420,0,0), vector(0,400,5050)))
 scene.camera.follow(planet)
 
 # Simulation loop
