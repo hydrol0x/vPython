@@ -63,7 +63,8 @@ class Neutron:
 
 
 # G = 6.7e-11
-G = 1
+# G = 6.7e-3
+G = 0
 
 # acceleration direction = norm(vector pointing to 0, 0, 0)*mag(g_acc)
 
@@ -76,7 +77,7 @@ G = 1
 # F = dp/dt 
 
 def create_particle(mass, radius, position, velocity):
-    particle = sphere(pos=position, color=color.blue, radius=radius, make_trail=True)
+    particle = sphere(pos=position, color=color.blue, radius=radius, make_trail=False)
     particle.velocity = velocity
     particle.mass = mass
     particle.momentum = velocity * mass
@@ -102,17 +103,18 @@ for i in range(20):
     y = random.randint(1, 15) 
     z = random.randint(1,15) 
     
-    vx = random.randint(0, 20) 
-    vy = random.randint(0,20) 
-    vz = random.randint(0, 20) 
+    vx = random.randint(-100, 100) 
+    vy = random.randint(-100, 100) 
+    vz = random.randint(-100, 100) 
 
     particle = create_particle(100, 1, vector(x,y,z), vector(vx,vy,vz))
     particles.append(particle) 
 
 def are_colliding(particle1, particle2):
+    threshold = min(particle1.radius, particle2.radius) * .01
     sum_r = particle1.radius + particle2.radius
     distance = mag(particle2.pos - particle1.pos)
-    return distance < sum_r
+    return distance-threshold < sum_r
 
 def calc_collision_dp(particle1, particle2):
     m1 = particle1.mass
@@ -138,10 +140,11 @@ def calc_collision_dp(particle1, particle2):
 
 
 # Simulation loop
-dt=0.00001
+dt=0.0000001
 while True:
     
     for pair in combinations(particles,2):
+        container_size = 20
         force = grav_force(*pair)
         dp = force*dt
 
@@ -160,10 +163,36 @@ while True:
         particle1.pos += (particle1.momentum / particle1.mass)*dt
         particle2.pos += (particle2.momentum / particle2.mass)*dt
 
+        # # TODO : simulate actual plane or box collisions
+        # if (particle1.pos.x > 20 or particle1.pos.x < -20 or 
+        #     particle1.pos.y > 20 or particle1.pos.y < -20 or
+        #     particle1.pos.z > 20 or particle1.pos.z < -20): 
+        #         particle1.momentum = -particle1.momentum
+        # if (particle2.pos.x > 20 or particle2.pos.x < -20 or 
+        #     particle2.pos.y > 20 or particle2.pos.y < -20 or
+        #     particle2.pos.z > 20 or particle2.pos.z < -20): 
+        #         particle2.momentum = -particle2.momentum
+                
+                # For particle1
+        if particle1.pos.x > container_size or particle1.pos.x < -container_size:
+            particle1.momentum.x = -particle1.momentum.x
+        if particle1.pos.y > container_size or particle1.pos.y < -container_size:
+            particle1.momentum.y = -particle1.momentum.y
+        if particle1.pos.z > container_size or particle1.pos.z < -container_size:
+            particle1.momentum.z = -particle1.momentum.z
+
+        # For particle2
+        if particle2.pos.x > container_size or particle2.pos.x < -container_size:
+            particle2.momentum.x = -particle2.momentum.x
+        if particle2.pos.y > container_size or particle2.pos.y < -container_size:
+            particle2.momentum.y = -particle2.momentum.y
+        if particle2.pos.z > container_size or particle2.pos.z < -container_size:
+            particle2.momentum.z = -particle2.momentum.z
+
         # energies = [0.5*particle.mass*(mag(particle.velocity)**2) for particle in particles]
                 
     # for particle in particles:
     #     dx = (particle.momentum/particle.mass)*dt
     #     particle.pos+=dx
-    rate(100)
+    rate(1/(dt))
     
